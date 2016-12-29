@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+    <group android:checkableBehavior="single">
+        <item
+            android:id="@+id/navigation_item_1"
+            android:checked="true"
+            android:icon="@drawable/ic_add_alert_black_24dp"
+            android:title="group1_item1"/>
+        <item
+            android:id="@+id/navigation_item_2"
+            android:icon="@drawable/ic_add_alert_black_24dp"
+            android:title="group1_item2"/>
+    </group>
+
+    <group android:checkableBehavior="single">
+        <item
+            android:id="@+id/group2_navigation_item_1"
+            android:checked="true"
+            android:icon="@drawable/ic_add_alert_black_24dp"
+            android:title="group2_item1"/>
+        <item
+            android:id="@+id/group2_navigation_item_2"
+            android:icon="@drawable/ic_add_alert_black_24dp"
+            android:title="group2_item2"/>
+    </group>
+</menu>
