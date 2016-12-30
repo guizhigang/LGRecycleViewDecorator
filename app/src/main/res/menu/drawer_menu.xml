@@ -2,25 +2,48 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android">
     <group android:checkableBehavior="single">
         <item
-            android:id="@+id/navigation_item_1"
+            android:id="@+id/menu_navigation_item_1"
             android:checked="true"
             android:icon="@drawable/ic_add_alert_black_24dp"
             android:title="group1_item1"/>
         <item
-            android:id="@+id/navigation_item_2"
+            android:id="@+id/menu_navigation_item_2"
             android:icon="@drawable/ic_add_alert_black_24dp"
             android:title="group1_item2"/>
-    </group>
 
-    <group android:checkableBehavior="single">
         <item
-            android:id="@+id/group2_navigation_item_1"
-            android:checked="true"
+            android:id="@+id/menu_group2_navigation_item_1"
             android:icon="@drawable/ic_add_alert_black_24dp"
             android:title="group2_item1"/>
         <item
-            android:id="@+id/group2_navigation_item_2"
+            android:id="@+id/menu_group2_navigation_item_2"
             android:icon="@drawable/ic_add_alert_black_24dp"
-            android:title="group2_item2"/>
+            android:title="group2_item2" />
     </group>
+
+    <item android:title="我的项目" android:checkableBehavior="single">
+        <menu>
+            <item
+                android:id="@+id/menu_nav_link1"
+                android:icon="@drawable/ic_add_alert_black_24dp"
+                android:title="玩物文玩"/>
+            <item
+                android:id="@+id/menu_nav_link2"
+                android:icon="@drawable/ic_add_alert_black_24dp"
+                android:title="嗨喂旅行"/>
+        </menu>
+    </item>
+
+    <item android:title="我的blog">
+        <menu>
+            <item
+                android:id="@+id/menu_nav_link11"
+                android:icon="@drawable/ic_add_alert_black_24dp"
+                android:title="简书地址"/>
+            <item
+                android:id="@+id/menu_nav_link22"
+                android:icon="@drawable/ic_add_alert_black_24dp"
+                android:title="Github地址"/>
+        </menu>
+    </item>
 </menu>
