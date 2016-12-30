@@ -9,7 +9,6 @@ import android.graphics.PorterDuffXfermode;
 import android.graphics.Rect;
 import android.graphics.drawable.Drawable;
 import android.support.v4.view.ViewCompat;
-import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
 
@@ -77,26 +76,24 @@ public class HorizontalDecorater extends RecyclerView.ItemDecoration {
         final int top = parent.getPaddingTop();
         final int pBottom = parent.getPaddingBottom();
         final int bottom = parent.getHeight() - pBottom;
-        RecyclerView.LayoutManager manager = parent.getLayoutManager();
-        if(manager instanceof GridLayoutManager) {
-            int spanCount = ((GridLayoutManager) manager).getSpanCount();
-            for (int i = 0; i < spanCount; ++i) {
-                final View child = parent.getChildAt(i);
-                RecyclerView.LayoutParams params = (RecyclerView.LayoutParams) child.getLayoutParams();
-                int mCLeft = params.leftMargin;
-                int mCRight = params.rightMargin;
-                int mCTop = params.topMargin;
-                int mCBottom = params.bottomMargin;
-                int childPaddingBottom = child.getPaddingBottom();
-                int left = child.getRight() + mCRight + mInsetsRight;
-                int right = left + 2;
-                int cHight = child.getHeight();
+
+        for (int i = 0; i < childCount; ++i) {
+            final View child = parent.getChildAt(i);
+            RecyclerView.LayoutParams params = (RecyclerView.LayoutParams) child.getLayoutParams();
+            int mCLeft = params.leftMargin;
+            int mCRight = params.rightMargin;
+            int mCTop = params.topMargin;
+            int mCBottom = params.bottomMargin;
+            int childPaddingBottom = child.getPaddingBottom();
+            int left = child.getRight() + mCRight + mInsetsRight;
+            int right = left + 2;
+            int cHight = child.getHeight();
 
 //            final int top = child.getTop() - mInsetsTop;
 //            final int bottom = top + child.getHeight() + mInsetsBottom;
-                c.drawRect(left, top, right, bottom, paint);
-            }
+            c.drawRect(left, top, right, bottom, paint);
         }
+
 //        int left = parent.getPaddingLeft();
 //        int pRight = parent.getPaddingRight();
 //        int right = parent.getWidth() - pRight;
