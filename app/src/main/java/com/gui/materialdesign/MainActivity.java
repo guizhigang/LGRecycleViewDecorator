@@ -45,8 +45,10 @@ public class MainActivity extends AppCompatActivity {
     @BindView(R.id.image_test)
     ImageView imageView;
 
+    private SimpleRecycleViewAdapter simpleRecycleViewAdapter;
+
     private List<String> valuesTes = new ArrayList();
-    private static String[] imageUrls = new String[] {
+    private static String[] imageUrls = new String[]{
             "http://d.hiphotos.bdimg.com/album/whcrop%3D657%2C370%3Bq%3D90/sign=2c994e578a82b9013df895711cfd9441/09fa513d269759eede0805bbb2fb43166d22df62.jpg",
             "http://pic2.ooopic.com/12/32/19/90bOOOPIC39_1024.jpg",
             "http://pic4.nipic.com/20091121/3764872_215617048242_2.jpg",
@@ -73,13 +75,22 @@ public class MainActivity extends AppCompatActivity {
         }
 
         /////recyclerView/////
-        for (int i = 1; i <= 50; ++i) {
+        for (int i = 1; i <= 20; ++i) {
             valuesTes.add("TestData" + i);
         }
 //        recyclerView.setLayoutManager(new LinearLayoutManager(this));
-        recyclerView.setLayoutManager(new GridLayoutManager(this,3));
+        recyclerView.setLayoutManager(new GridLayoutManager(this, 3));
         recyclerView.addItemDecoration(new HorizontalDecorater(this));
-        recyclerView.setAdapter(new SimpleRecycleViewAdapter(this,valuesTes));
+        //adapter
+        simpleRecycleViewAdapter = new SimpleRecycleViewAdapter(this, valuesTes);
+        simpleRecycleViewAdapter.setSimpleListener(new SimpleRecycleViewAdapter.SimpleListener() {
+            @Override
+            public void onClick(int position) {
+                valuesTes.remove(position);
+                simpleRecycleViewAdapter.notifyItemRemoved(position);
+            }
+        });
+        recyclerView.setAdapter(simpleRecycleViewAdapter);
     }
 
     private void setUpDrawerLayout(NavigationView navigationView) {
@@ -147,6 +158,16 @@ public class MainActivity extends AppCompatActivity {
         });
     }
 
+    @OnClick(R.id.image_test)
+    public void onClickImageTest1(View view){
+        recyclerView.setLayoutManager(new LinearLayoutManager(this,LinearLayoutManager.HORIZONTAL,false));
+    }
+
+    @OnClick(R.id.image_test2)
+    public void onClickImageTest2(View view){
+        recyclerView.setLayoutManager(new LinearLayoutManager(this,LinearLayoutManager.VERTICAL,false));
+    }
+
     /**
      * 点击toolbar的icon弹出drawerLayout
      *
@@ -172,15 +193,26 @@ public class MainActivity extends AppCompatActivity {
                         Log.d(TAG, "Snackbar onClicked...");
                     }
                 }).show();
-        recyclerView.smoothScrollToPosition(10);
+        valuesTes.add("Test");
+        simpleRecycleViewAdapter.notifyDataSetChanged();
     }
 
     public static class SimpleRecycleViewAdapter extends RecyclerView.Adapter<SimpleRecycleViewAdapter.ViewHolder> {
         private List<String> mValues;
         private Context context;
+        private SimpleListener simpleListener;
+
+        public interface SimpleListener {
+            void onClick(int position);
+        }
+
         public SimpleRecycleViewAdapter(Context context, List<String> items) {
             this.context = context;
             mValues = items;
+        }
+
+        public void setSimpleListener(SimpleListener simpleListener) {
+            this.simpleListener = simpleListener;
         }
 
         @Override
@@ -190,7 +222,7 @@ public class MainActivity extends AppCompatActivity {
         }
 
         @Override
-        public void onBindViewHolder(ViewHolder holder, final int position) {
+        public void onBindViewHolder(final ViewHolder holder, final int position) {
             holder.textView.setText(mValues.get(position));
             Glide.with(holder.avatarView.getContext())
                     .load(imageUrls[position % imageUrls.length])
@@ -200,7 +232,10 @@ public class MainActivity extends AppCompatActivity {
             holder.itemView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    Log.d("ViewAdapter","onBindViewHolder:" + position);
+                    Log.d("ViewAdapter", "onBindViewHolder:" + position + " adpaterPosition:" + holder.getAdapterPosition());
+                    if (simpleListener != null) {
+                        simpleListener.onClick(holder.getAdapterPosition());
+                    }
                 }
             });
         }
@@ -221,7 +256,7 @@ public class MainActivity extends AppCompatActivity {
 
             public ViewHolder(View itemView) {
                 super(itemView);
-                ButterKnife.bind(this,itemView);
+                ButterKnife.bind(this, itemView);
                 this.itemView = itemView;
             }
         }
