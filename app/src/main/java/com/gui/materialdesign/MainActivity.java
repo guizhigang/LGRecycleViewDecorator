@@ -2,7 +2,6 @@ package com.gui.materialdesign;
 
 import android.content.Context;
 import android.os.Bundle;
-import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.NavigationView;
 import android.support.design.widget.Snackbar;
 import android.support.v4.view.GravityCompat;
@@ -22,6 +21,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
+import com.gui.lgrecycleviewdecorator.LGRecycleViewDecorator;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -80,7 +80,7 @@ public class MainActivity extends AppCompatActivity {
         }
 //        recyclerView.setLayoutManager(new LinearLayoutManager(this));
         recyclerView.setLayoutManager(new GridLayoutManager(this, 3));
-        recyclerView.addItemDecoration(new HorizontalDecorater(this));
+        recyclerView.addItemDecoration(new LGRecycleViewDecorator(this, R.drawable.list_divider));
         //adapter
         simpleRecycleViewAdapter = new SimpleRecycleViewAdapter(this, valuesTes);
         simpleRecycleViewAdapter.setSimpleListener(new SimpleRecycleViewAdapter.SimpleListener() {
@@ -159,13 +159,13 @@ public class MainActivity extends AppCompatActivity {
     }
 
     @OnClick(R.id.image_test)
-    public void onClickImageTest1(View view){
-        recyclerView.setLayoutManager(new LinearLayoutManager(this,LinearLayoutManager.HORIZONTAL,false));
+    public void onClickImageTest1(View view) {
+        recyclerView.setLayoutManager(new LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false));
     }
 
     @OnClick(R.id.image_test2)
-    public void onClickImageTest2(View view){
-        recyclerView.setLayoutManager(new LinearLayoutManager(this,LinearLayoutManager.VERTICAL,false));
+    public void onClickImageTest2(View view) {
+        recyclerView.setLayoutManager(new LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false));
     }
 
     /**
@@ -233,7 +233,7 @@ public class MainActivity extends AppCompatActivity {
                 @Override
                 public void onClick(View v) {
                     Log.d("ViewAdapter", "onBindViewHolder:" + position + " adpaterPosition:" + holder.getAdapterPosition());
-                    if (simpleListener != null) {
+                    if (simpleListener != null && holder.getAdapterPosition() != -1) {
                         simpleListener.onClick(holder.getAdapterPosition());
                     }
                 }

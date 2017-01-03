@@ -1,44 +1,47 @@
-package com.gui.materialdesign;
+package com.gui.lgrecycleviewdecorator;
 
 import android.content.Context;
+import android.content.res.TypedArray;
 import android.graphics.Canvas;
-import android.graphics.Color;
-import android.graphics.Paint;
-import android.graphics.PorterDuff;
-import android.graphics.PorterDuffXfermode;
 import android.graphics.Rect;
 import android.graphics.drawable.Drawable;
+import android.support.v4.content.ContextCompat;
 import android.support.v4.view.ViewCompat;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.View;
 
 /**
  * Created by guizhigang on 16/12/30.
  */
-public class HorizontalDecorater extends RecyclerView.ItemDecoration {
-    private Paint paint;
+public class LGRecycleViewDecorator extends RecyclerView.ItemDecoration {
     private Context context;
-    private int mInsetsLeft = 10;
-    private int mInsetsTop = 10;
-    private int mInsetsRight = 10;
-    private int mInsetsBottom = 10;
-    public static final int HORIZONTAL = 0X1;
-    public static final int VERTICAL = 0X2;
-    private int oritation = 0;
+    private Rect mInsetsRect = new Rect(10, 10, 10, 10);
 
-    public HorizontalDecorater(Context context) {
+    private static final int[] ATTRS = {android.R.attr.listDivider};
+    private Drawable divider;
+
+    public LGRecycleViewDecorator(Context context) {
         this.context = context;
-        paint = new Paint(Paint.ANTI_ALIAS_FLAG);
-        paint.setColor(Color.RED);
+        TypedArray a = context.obtainStyledAttributes(ATTRS);
+        divider = a.getDrawable(0);
+        a.recycle();
+    }
+
+    public LGRecycleViewDecorator(Context context, int drawableId) {
+        this.context = context;
+        divider = ContextCompat.getDrawable(context, drawableId);
+    }
+
+    public void setmInsets(int left, int top, int right, int bottom) {
+        mInsetsRect.set(left, top, right, bottom);
     }
 
     @Override
     public void getItemOffsets(Rect outRect, View view, RecyclerView parent, RecyclerView.State state) {
         super.getItemOffsets(outRect, view, parent, state);
-        outRect.set(mInsetsLeft, mInsetsTop, mInsetsRight, mInsetsBottom);
+        outRect.set(mInsetsRect.left, mInsetsRect.top, mInsetsRect.right, mInsetsRect.bottom);
     }
 
     @Override
@@ -55,7 +58,7 @@ public class HorizontalDecorater extends RecyclerView.ItemDecoration {
         if (manager instanceof GridLayoutManager) {
             drawGridDecorater(c, parent, (GridLayoutManager) manager);
         } else if (manager instanceof LinearLayoutManager) {
-            drawLinearDecorater(c,parent,(LinearLayoutManager)manager);
+            drawLinearDecorater(c, parent, (LinearLayoutManager) manager);
         }
     }
 
@@ -64,19 +67,20 @@ public class HorizontalDecorater extends RecyclerView.ItemDecoration {
         int orientation = manager.getOrientation();
         int top = parent.getPaddingTop();
         int bottom = 0;
-        if(orientation == LinearLayoutManager.HORIZONTAL) {
+        if (orientation == LinearLayoutManager.HORIZONTAL) {
             for (int i = 0; i < childCount; ++i) {
                 View child = parent.getChildAt(i);
                 RecyclerView.LayoutParams params = (RecyclerView.LayoutParams) child.getLayoutParams();
                 int mCRight = params.rightMargin;
                 int mCBottom = params.bottomMargin;
 
-                bottom = child.getBottom() + mInsetsBottom + mCBottom;
-                int left = child.getRight() + mCRight + mInsetsRight;
-                int right = left + 2;
-                c.drawRect(left, top, right, bottom, paint);
+                bottom = child.getBottom() + mInsetsRect.bottom + mCBottom;
+                int left = child.getRight() + mCRight + mInsetsRect.right;
+                int right = left + divider.getIntrinsicWidth();
+                divider.setBounds(left, top, right, bottom);
+                divider.draw(c);
             }
-        }else if(orientation == LinearLayoutManager.VERTICAL) {
+        } else if (orientation == LinearLayoutManager.VERTICAL) {
             int left = parent.getPaddingLeft();
             int pRight = parent.getPaddingRight();
             int right = parent.getWidth() - pRight;
@@ -88,11 +92,12 @@ public class HorizontalDecorater extends RecyclerView.ItemDecoration {
                 RecyclerView.LayoutParams params = (RecyclerView.LayoutParams) child.getLayoutParams();
 
                 int mCBottom = params.bottomMargin;
-                top = child.getBottom() + mInsetsBottom + mCBottom + Math.round(ViewCompat.getTranslationY(child));
-                if (top < parent.getPaddingTop())
+                top = child.getBottom() + mInsetsRect.bottom + mCBottom + Math.round(ViewCompat.getTranslationY(child));
+                bottom = top + divider.getIntrinsicHeight();
+                if (top < parent.getPaddingTop() || bottom >= parent.getHeight() - parent.getPaddingBottom())
                     continue;
-                bottom = top + 2;
-                c.drawRect(left, top, right, bottom, paint);
+                divider.setBounds(left, top, right, bottom);
+                divider.draw(c);
             }
         }
     }
@@ -104,22 +109,24 @@ public class HorizontalDecorater extends RecyclerView.ItemDecoration {
         int cols = Math.min(spanCount, childCount);
         int bottom = 0;
         int top = parent.getPaddingTop();
+
         for (int i = 0; i < cols; ++i) {
-            int actureRowIndex = rows;
-            int lastIndex = 0;
-            if (actureRowIndex * cols + i >= childCount) {
-                actureRowIndex--;
+            int actureRow = rows;
+            int lastIndex;
+            if (actureRow * cols + i >= childCount) {
+                actureRow--;
             }
-            lastIndex = actureRowIndex * cols + i;
+            lastIndex = actureRow * cols + i;
             View child = parent.getChildAt(lastIndex);
             RecyclerView.LayoutParams params = (RecyclerView.LayoutParams) child.getLayoutParams();
             int mCRight = params.rightMargin;
             int mCBottom = params.bottomMargin;
 
-            bottom = child.getBottom() + mInsetsBottom + mCBottom;
-            int left = child.getRight() + mCRight + mInsetsRight;
-            int right = left + 2;
-            c.drawRect(left, top, right, bottom, paint);
+            bottom = Math.min(child.getBottom() + mInsetsRect.bottom + mCBottom, parent.getHeight() - parent.getPaddingBottom());
+            int left = child.getRight() + mCRight + mInsetsRect.right;
+            int right = left + divider.getIntrinsicWidth();
+            divider.setBounds(left, top, right, bottom);
+            divider.draw(c);
         }
 
         int left = parent.getPaddingLeft();
@@ -132,11 +139,13 @@ public class HorizontalDecorater extends RecyclerView.ItemDecoration {
             RecyclerView.LayoutParams params = (RecyclerView.LayoutParams) child.getLayoutParams();
 
             int mCBottom = params.bottomMargin;
-            top = child.getBottom() + mInsetsBottom + mCBottom + Math.round(ViewCompat.getTranslationY(child));
-            if (top < parent.getPaddingTop())
+            top = child.getBottom() + mInsetsRect.bottom + mCBottom + Math.round(ViewCompat.getTranslationY(child));
+            bottom = top + divider.getIntrinsicHeight();
+            if (top < parent.getPaddingTop() || bottom >= parent.getHeight() - parent.getPaddingBottom()) {
                 continue;
-            bottom = top + 2;
-            c.drawRect(left, top, right, bottom, paint);
+            }
+            divider.setBounds(left, top, right, bottom);
+            divider.draw(c);
         }
     }
 }

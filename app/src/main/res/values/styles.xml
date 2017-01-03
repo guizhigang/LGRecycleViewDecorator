@@ -7,6 +7,7 @@
         <item name="android:actionBarSize">48dp</item>
         <item name="android:textColorPrimary">@android:color/black</item>
         <item name="android:windowBackground">@android:color/white</item>
+        <item name="android:listDivider">@drawable/list_divider</item>
     </style>
     <!-- Base application theme. -->
     <style name="AppTheme" parent="BaseTheme">
