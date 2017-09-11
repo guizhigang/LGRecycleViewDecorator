@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+    <group android:menuCategory="system">
+        <item android:title="LINEAR_HORIZONTAL" android:id="@+id/line_horizontal"></item>
+        <item android:title="LINEAR_VERTICAL" android:id="@+id/line_veritcal"></item>
+        <item android:title="GRIDE" android:id="@+id/gride"></item>
+        <item android:title="STAGGER" android:id="@+id/stagger"></item>
+    </group>
+    <item android:title="LoadMore">
+        <menu>
+            <item android:title="LoadMoreTest" android:id="@+id/load_more_test"></item>
+        </menu>
+    </item>
+</menu>

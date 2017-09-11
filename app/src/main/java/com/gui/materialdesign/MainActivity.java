@@ -1,6 +1,7 @@
 package com.gui.materialdesign;
 
 import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.NavigationView;
 import android.support.design.widget.Snackbar;
@@ -11,9 +12,11 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.support.v7.widget.StaggeredGridLayoutManager;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
@@ -80,7 +83,9 @@ public class MainActivity extends AppCompatActivity {
         }
 //        recyclerView.setLayoutManager(new LinearLayoutManager(this));
         recyclerView.setLayoutManager(new GridLayoutManager(this, 3));
-        recyclerView.addItemDecoration(new LGRecycleViewDecorator(this, R.drawable.list_divider));
+        LGRecycleViewDecorator lgRecycleViewDecorator = new LGRecycleViewDecorator(this, R.drawable.list_divider);
+        lgRecycleViewDecorator.setmInsets(5,10,20,20);
+        recyclerView.addItemDecoration(lgRecycleViewDecorator);
         //adapter
         simpleRecycleViewAdapter = new SimpleRecycleViewAdapter(this, valuesTes);
         simpleRecycleViewAdapter.setSimpleListener(new SimpleRecycleViewAdapter.SimpleListener() {
@@ -92,6 +97,13 @@ public class MainActivity extends AppCompatActivity {
         });
         recyclerView.setAdapter(simpleRecycleViewAdapter);
     }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.main_menu,menu);
+        return true;
+    }
+
 
     private void setUpDrawerLayout(NavigationView navigationView) {
         navigationView.setItemIconTintList(null);
@@ -160,7 +172,8 @@ public class MainActivity extends AppCompatActivity {
 
     @OnClick(R.id.image_test)
     public void onClickImageTest1(View view) {
-        recyclerView.setLayoutManager(new LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false));
+        //recyclerView.setLayoutManager(new LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false));
+        startActivity(new Intent(this,MyViewGroupActivity.class));
     }
 
     @OnClick(R.id.image_test2)
@@ -179,6 +192,21 @@ public class MainActivity extends AppCompatActivity {
         switch (item.getItemId()) {
             case android.R.id.home:
                 drawerLayout.openDrawer(GravityCompat.START);
+                return true;
+            case R.id.gride:
+                recyclerView.setLayoutManager(new GridLayoutManager(this, 3));
+                return true;
+            case R.id.line_horizontal:
+                recyclerView.setLayoutManager(new LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false));
+                return true;
+            case R.id.line_veritcal:
+                recyclerView.setLayoutManager(new LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false));
+                return true;
+            case R.id.stagger:
+                recyclerView.setLayoutManager(new StaggeredGridLayoutManager(4,StaggeredGridLayoutManager.VERTICAL));
+                return true;
+            case R.id.load_more_test:
+                startActivity(new Intent(this,LoadMoreActivity.class));
                 return true;
         }
         return super.onOptionsItemSelected(item);

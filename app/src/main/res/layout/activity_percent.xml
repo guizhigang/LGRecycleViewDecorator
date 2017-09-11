@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context="com.gui.materialdesign.PercentActivity">
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="22dp"
+        android:orientation="horizontal">
+
+        <TextView
+            android:id="@+id/color_light"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="0.3"
+            android:background="@android:color/holo_blue_dark"
+            android:gravity="center_vertical"
+            android:padding="4dp"
+            android:textColor="@android:color/white"
+            android:textSize="10sp" />
+
+        <TextView
+            android:id="@+id/text_show"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="0.7"
+            android:background="@android:color/darker_gray"
+            android:gravity="center_vertical"
+            android:padding="4dp"
+            android:text="Yes we can 30%"
+            android:textColor="@android:color/black"
+            android:textSize="10sp" />
+    </LinearLayout>
+
+</RelativeLayout>
